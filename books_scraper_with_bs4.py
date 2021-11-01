@@ -37,7 +37,7 @@ def extract(listings):
     # return
 
 
-pg = 48
+pg = 1 # initialize page numbers
 
 while True:
     url = f"http://books.toscrape.com/catalogue/page-{pg}.html"
