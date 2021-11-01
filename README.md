@@ -1,2 +1,5 @@
-# Scrapers
-contains web scraper projects
+# Web Scraping
+
+## Project 1
+### Scraping with BeatifulSoup + Requests Module 
+
