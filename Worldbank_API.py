@@ -52,6 +52,5 @@ df.columns = [' '.join(col).strip() for col in df.columns.values]
 
 #OUTPUT DATA
 df.to_csv(r'.\Data\WB_urban_population.csv', index = False)
-print(df.head())
-print('End')
+
 
