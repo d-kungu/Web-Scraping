@@ -2,7 +2,7 @@
 '''Collecting data from World Bank API 
 - Proportion number of people living in urban areas SP.URB.TOTL.IN.ZS 2010 - 2020
 - https://datahelpdesk.worldbank.org/knowledgebase/topics/125589
-
+- Output: https://github.com/diana-kungu/Web-Scraping/blob/main/Data/WB_urban_population.csv
     ** Created by Diana Kung'u **
 
 '''
