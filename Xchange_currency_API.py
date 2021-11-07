@@ -10,7 +10,7 @@ https://open.er-api.com/v6 Endpoint.
 '''
 import json
 import requests
-from pandas import read_json, DataFrame, Series
+from pandas import read_json
 
 
 #Input a currency
