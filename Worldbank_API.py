@@ -3,6 +3,7 @@
 - Proportion number of people living in urban areas SP.URB.TOTL.IN.ZS 2010 - 2020
 - https://datahelpdesk.worldbank.org/knowledgebase/topics/125589
 - Output: https://github.com/diana-kungu/Web-Scraping/blob/main/Data/WB_urban_population.csv
+
     ** Created by Diana Kung'u **
 
 '''
@@ -48,7 +49,7 @@ df.drop(['indicator.value', 'indicator.id', 'decimal', 'obs_status', 'unit'], ax
 df = df.pivot(index=['countryiso3code','country.id', 'country.value'], columns='date').reset_index()
 
 
-df.columns = [' '.join(col).strip() for col in df.columns.values]
+df.columns = [' '.join(col).strip().replace('.value', "") for col in df.columns.values]
 
 #OUTPUT DATA
 df.to_csv(r'.\Data\WB_urban_population.csv', index = False)
