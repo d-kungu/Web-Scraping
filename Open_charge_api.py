@@ -10,9 +10,9 @@ electric vehicles charging points.
 '''
 
 #IMPORTS
-from pandas import DataFrame, json_normalize, concat
+from pandas import DataFrame, json_normalize, concat, merge
 from requests import get
-from json import loads
+from numpy import where
 from os import environ
 
 # Create URL 
@@ -31,7 +31,7 @@ results = response.json()
 
 # Extract required data
 labels = ['UsageTypeID', 'AddressInfo', 'NumberOfPoints', 'connections']
-conn_lsts = ['ConnectionTypeID', 'Amps', 'Voltage', 'PowerKW']
+conn_lsts = ['ConnectionTypeID', 'Amps', 'Voltage', 'PowerKW', 'LevelID']
 
 all_results = []
 
@@ -58,8 +58,9 @@ add_labels = ['ID', 'Town', 'Latitude', 'Longitude', 'StateOrProvince', 'Postcod
 df_exploded['AddressInfo'] = df_exploded['AddressInfo'].apply(
                                 lambda x: {key: x[key] for key in x.keys and add_labels})
 df_address = json_normalize(df_exploded['AddressInfo'])
-df_address['Address'] = df_address['Title'] + df_address['Postcode']
-df_address.drop(['Title', 'Postcode'], axis = 1, inplace = True)
+df_address['Address'] = df_address['Title'] + ' ' + df_address['Postcode']
+df_address['Areacode'] = df_address['Postcode'].str.extract(r'(\w+\d+)')
+df_address.drop(['Title'], axis = 1, inplace = True)
 
 # Create connection fields from Connection field Dictionaries
 df_connections = json_normalize(df_exploded['connections'])
@@ -68,7 +69,26 @@ df_connections = json_normalize(df_exploded['connections'])
 df2 = concat([df_exploded.drop(['connections', 'AddressInfo'], axis=1), 
                 df_connections, df_address], axis= 1)
 
+#Clean rows where Latitude and Longitude entries are interchanged
+arr = where(df2['Longitude'] > df2['Latitude'], [df2['Longitude'],df2['Latitude']], 
+            [df2['Latitude'], df2['Longitude']] )
+df2['Latitude'] = arr[0]
+df2['Longitude'] = arr[1]
+
+#Load connection types reference data
+ref = get("https://raw.githubusercontent.com/openchargemap/ocm-data/master/reference.json")
+txt = ref.json()['ConnectionTypes']
+
+#Create a Connection Type reference dataframe
+reference_df = (DataFrame(txt)).iloc[:, :2]
+reference_df.ID = reference_df['ID'].astype(float)
+
+#Merge 
+df2.rename(columns={"ID": 'LOC_ID'}, inplace= True)
+df2 = merge(df2, reference_df, how = 'left', left_on = 'ConnectionTypeID', right_on = 'ID')
+
 # OUTPUT
 df2.to_csv(r'.\Data\EV_Charging_Points_GB.csv', index= False)
+print ('end')
 
 
