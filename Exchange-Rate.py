@@ -30,10 +30,12 @@ base_currency = st.selectbox("Select Currency From", currency_codes)
 amount = st.number_input('Enter Amount')
 convert_to  = st.selectbox("Select Currency To", currency_codes.difference({base_currency}))
 
+
 def xchange_fnc(from_currency, to_currency):
 #Connect to  API
     response = requests.get(f"https://open.er-api.com/v6/latest/{base_currency.upper()}")
     # get Rate
+    global converted
     try:
         rates = response.json()['rates']
         rate = rates.get(convert_to.upper())
@@ -44,21 +46,25 @@ def xchange_fnc(from_currency, to_currency):
     
     except:
         st.markdown("## Oops We dont have that currency!")
+
+    try:
         
-    if amount != 0.0:
-        total = convert_to + " "+ "{:,.2f}".format(converted)
-        
-        html_total = f"""
-        <style>
-        p.a {{
-        font: bold {30}px Courier;
-        text-align: center;
-        }}
-        </style>
-        <p class="a">{total}</p>
-        """
-        st.write(" ")
-        st.markdown(html_total, unsafe_allow_html=True)
+        if amount != 0.0:
+            total = convert_to + " "+ "{:,.2f}".format(converted)
+            
+            html_total = f"""
+            <style>
+            p.a {{
+            font: bold {30}px Courier;
+            text-align: center;
+            }}
+            </style>
+            <p class="a">{total}</p>
+            """
+            st.write(" ")
+            st.markdown(html_total, unsafe_allow_html=True)
+    except:
+        " "        
 #button
 if st.button("Convert"):
     xchange_fnc(base_currency, convert_to)
