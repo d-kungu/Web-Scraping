@@ -4,6 +4,7 @@ https://open.er-api.com/v6 Endpoint.
 - Connects to API
 - Extract Data
 - Parse Json and create Dataframe
+-Creates streamlit web App
 
    ** Created by: Diana Kung'u **
 
