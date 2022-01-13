@@ -1,3 +1,9 @@
+''' Web scraping property details listed on https://www.buyrentkenya.com.
+    Note: This script may break if the website is restructured. 
+ 
+Written by: Diana Kung'u
+'''
+
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup as bs
@@ -7,6 +13,12 @@ all_houses = []
 
 
 def all_listings(url):
+    """Retrieves all listed product links
+    Args:
+        url ([str]): Website link
+    Returns:
+        [list]: list of urls of each listed property
+    """
     res = requests.get(url)
     status = res.status_code
     house_soup = bs(res.text, "lxml")
@@ -19,6 +31,11 @@ def all_listings(url):
 
 
 def extract(listings):
+    """Extraction details of each listed property
+
+    Args:
+        listings (list): lists of urls of each listed property
+    """
     for listing in listings:
         bed_rms = listing.find("span", {"data-cy": "card-beds"}).text.strip()
         try:
@@ -72,7 +89,7 @@ def extract(listings):
 
 
 condition = True
-pg = 106
+pg = 106 #Last page 
 while condition:
     url = f"https://www.buyrentkenya.com/houses-for-rent?page={pg}"
     print(f"scraping page {pg}")
