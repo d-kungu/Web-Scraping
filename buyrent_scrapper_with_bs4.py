@@ -7,7 +7,6 @@ Written by: Diana Kung'u
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup as bs
-from requests.models import Response
 
 all_houses = []
 
